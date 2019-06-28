@@ -20,13 +20,17 @@ export default (args) => {
     defaultValue,
     newValues,
     queryInterface,
-    enumName = `enum_${tableName}_${columnName}`
+    enumName = `enum_${tableName}_${columnName}`,
+    sequelizeOptions: additionalOptions = {},
   } = args;
 
   const newEnumName = `${enumName}_new`;
 
-  return queryInterface.sequelize.transaction((t) => {
-    const sequelizeOptions = { transaction: t };
+  return queryInterface.sequelize.transaction(additionalOptions, (t) => {
+    const sequelizeOptions = {
+      ...additionalOptions,
+      transaction: t
+    };
 
     // Create a copy of the type
     return createEnum(
